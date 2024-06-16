@@ -31,3 +31,14 @@
 *.out
 *.app
 *.bin
+
+# Fichiers binaires générés par gcc/g++
+*.o
+*.a
+*.so
+*.d
+
+# Fichiers binaires générés par CMake
+cmake_install.cmake
+CMakeCache.txt
+CMakeFiles/
