@@ -1,1 +1,5 @@
 # PID_control_RPi_cooling
+
+RPi4 kit purchased: https://www.amazon.fr/Bqeel-Alimentation-Interrupteur-Ventilateur-Dissipateur/dp/B082PSBBMM/ref=sr_1_14?dib=eyJ2IjoiMSJ9.8ZfM4XGhIburiNAfEtgKbJFrU5zvWGZoBZ-6HRG4gFjt2i8pjqskQJPU_KjPN7vEdm6KOWqjWq_iFT-oObGvz2xWPGZmdHsSbrJnYXjrB3F7Ad_vnLYooypQqPPFwqQe7gGHJ57mA7NC30jQawqD7L142dfsjkJJnwaJw5LuD1YDDkUX0XS7CnVAGJchgjCAU4LaBSgiruQE6XINpymChrsZDNNicJMLEG-OJog1AwlwJedFPN9K_zxn6UqhTWdGk9F0qHX4Xsbf0k8BBapWVNJrBmAnePdH5uOXKM0Qf_0.QHt9RVqp2MEe4xmj7bZPu1lMkk6QZU34N2WpOzn6x-8&dib_tag=se&keywords=rpi4&qid=1718524926&sr=8-14&th=1
+
+Control of the cooling of my Raspberry Pi 4 with a ventilator using a PI controller and corrector.
