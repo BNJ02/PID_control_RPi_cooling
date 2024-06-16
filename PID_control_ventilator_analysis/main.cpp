@@ -171,6 +171,9 @@ int main(void)
     float CPU_temperature_measured = 0.0;
     float CPU_usage = 0.0;
     float p_range = 0;
+    float pwm_ventilo = 0;
+
+    time_t now = time(0);
 
     string time_string = "";
 
@@ -206,11 +209,11 @@ int main(void)
                 printf("La température du CPU est : %.2f C\n", CPU_temperature_measured);
 
                 // Get the current time
-                time_t now = time(0);
+                now = time(0);
                 tm *ltm = localtime(&now);
 
                 // Control the PWM signal
-                float pwm_ventilo = 120 + pid_controller(CPU_temperature_setpoint, CPU_temperature_measured, kp * p_range, ki, kd, dt, integral, last_error);
+                pwm_ventilo = 120 + pid_controller(CPU_temperature_setpoint, CPU_temperature_measured, kp * p_range, ki, kd, dt, integral, last_error);
                 gpioPWM(18, clip(pwm_ventilo));   // Set the duty cycle
 
                 // Get the current time and the error between the measured and setpoint values
