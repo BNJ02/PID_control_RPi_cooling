@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 # Lire le fichier CSV
-df = pd.read_csv('output.csv')
+df = pd.read_csv('5_cycles.csv')
 
 # Extraire la colonne à lisser
 colonne = df['CPU Temperature (°C)']

@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 # Lire le fichier CSV
-df = pd.read_csv('output_255_255_255_255_255.csv')
+df = pd.read_csv('5_cycles.csv')
 
 # Extraire la colonne à lisser
 colonne = df['CPU Temperature (°C)']
@@ -18,4 +18,4 @@ colonne_lissee = np.convolve(colonne, filtre, mode='same')
 df['CPU Temperature lissée (°C), taille filtre = ' + str(taille_filtre)] = colonne_lissee.round(decimals=1)
 
 # Écrire le résultat dans un nouveau fichier CSV
-df.to_csv('data_lissee.csv', index=False)
+df.to_csv('5_cycles_smoothed.csv', index=False)

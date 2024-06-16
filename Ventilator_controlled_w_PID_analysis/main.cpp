@@ -90,7 +90,7 @@ int clip(int value) {
 }
 
 // Function to append to a CSV file
-void append_to_csv(const vector<tuple<int, float, string, float, int, float, float, float, float, int>>& values, const string& filename) {
+void append_to_csv(const vector<tuple<int, float, string, float, int, float, float, float, float, float, int>>& values, const string& filename) {
     ofstream file(filename, std::ios_base::app);
     if (!file) {
         cerr << "Erreur lors de l'ouverture du fichier " << filename << endl;
@@ -104,11 +104,12 @@ void append_to_csv(const vector<tuple<int, float, string, float, int, float, flo
                 get<2>(value) << "," << 
                 get<3>(value) << "," << 
                 get<4>(value) << "," << 
-                get<5>(value) << "," << 
+                get<5>(value) << "," <<
                 get<6>(value) << "," << 
                 get<7>(value) << "," << 
-                int(get<8>(value)) << "," << 
-                get<9>(value) << "\n";
+                get<8>(value) << "," << 
+                int(get<9>(value)) << "," << 
+                get<10>(value) << "\n";
     }
 
     file.close();
@@ -126,7 +127,7 @@ void create_csv(const string& filename, int tau_FTBO, int tau_FTBF, float ki, fl
     file << tau_FTBO << "," << tau_FTBF << "," << ki << "," << kp << "," << kd << "," << dt << "," << nb_points << "\n";
     
     // Headers
-    file << "Consigne CPU Temp,Température CPU,Heure,CPU Usage (%),CPU Frequency (MHz),Erreur,Correction dérivée,Correction intégrale,PWM signal,PWM signal clipped\n";
+    file << "Consigne CPU Temp,Température CPU,Heure,CPU Usage (%),CPU Frequency (MHz),Erreur,Correction proportionnelle,P_range,Correction intégrale,PWM signal,PWM signal clipped\n";
     
     file.close();
 }
@@ -177,7 +178,7 @@ int main(void)
     create_csv("enregistrement_PID_ventilateur_RPI.csv", tau_FTBO, tau_FTBF, ki, kp, kd, dt, nb_points);
 
     // Vector to store the values
-    vector<tuple<int, float, string, float, int, float, float, float, float, int>> values;
+    vector<tuple<int, float, string, float, int, float, float, float, float, float, int>> values;
 
 
     // Main loop
@@ -190,10 +191,10 @@ int main(void)
             for(int j = 0; j < 3; j++)
             {
                 // Update setpoint if needed (depending on the CPU usage)
-                if(CPU_usage < 0.25) { CPU_temperature_setpoint = 60; p_range = 0.8; } 
+                if(CPU_usage < 0.25) { CPU_temperature_setpoint = 60; p_range = 1.3; } 
                 else if(CPU_usage < 0.5) { CPU_temperature_setpoint = 70; p_range = 1; }
-                else if(CPU_usage < 0.75) { CPU_temperature_setpoint = 75; p_range = 1.2; } 
-                else { CPU_temperature_setpoint = 85; p_range = 2; }
+                else if(CPU_usage < 0.75) { CPU_temperature_setpoint = 75; p_range = 1.3; } 
+                else { CPU_temperature_setpoint = 85; p_range = 1.5; }
 
                 // Get the CPU temperature
                 for(int k = 0; k < nb_points; k++)
@@ -233,6 +234,7 @@ int main(void)
                                                     get_cpu_freq() / 1000, 
                                                     error, 
                                                     kp * p_range * error, 
+                                                    p_range,
                                                     ki * integral,
                                                     pwm_ventilo,
                                                     clip(pwm_ventilo)));
