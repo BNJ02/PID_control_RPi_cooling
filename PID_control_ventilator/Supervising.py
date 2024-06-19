@@ -14,6 +14,9 @@ def get_cpu_temp():
 
 # Main function
 if __name__ == "__main__":
+    cpu_usage = 0.0
+    cpu_temp = 0.0
+
     # Main loop to display informations of supervising
     while True:
         cpu_usage = get_cpu_usage()
@@ -26,9 +29,14 @@ if __name__ == "__main__":
         else:
             setpoint = 80
 
-        print("---------------------------------------------------")
-        print("Consigne : {}°C".format(setpoint))
-        print("Mesuré : {:.2f}°C".format(get_cpu_temp()))
-        print("CPU usage : {}%".format(cpu_usage))
+        for i in range (0, 10):
+            cpu_temp += get_cpu_temp()
+            time.sleep(0.1)
+        cpu_temp /= 10
+
+        print("--------------------------------------------")
+        print("Consigne :\t{}°C".format(setpoint))
+        print("Mesuré :\t{:.2f}°C".format(cpu_temp))
+        print("CPU usage :\t{}%".format(cpu_usage))
         
         time.sleep(5)

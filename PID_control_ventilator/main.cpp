@@ -6,6 +6,7 @@
 #include <chrono>   // Needed for the chrono class
 #include <thread>   // Needed for the thread class
 #include <ctime>    // Needed for the time function
+#include <cstdlib>  // Needed for the setenv function
 
 using namespace std;
 
@@ -73,6 +74,9 @@ int clip(int value) {
 
 // Set up
 int setup() {
+    // Remove the files if it exists
+    system("sudo rm /var/run/pigpio.pid");  // Remove the file if it exists
+    system("fuser -k 8888/tcp"); // Kill the process if it exists
     // Set up the GPIO
     if (gpioInitialise() < 0) return 1;  // Return an error if initialisation failed
     gpioSetMode(18, PI_OUTPUT);  // Set GPIO 18 as output
@@ -120,7 +124,7 @@ int main(void)
         tm *ltm = localtime(&now);
 
         // I sleep between midnight and 7 a.m.
-        if (ltm->tm_hour > 7) {
+        if (ltm->tm_hour >= 7) {
             // Get the CPU temperature
             CPU_usage = get_cpu_usage();
 
