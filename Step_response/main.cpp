@@ -47,6 +47,7 @@ double get_cpu_temp() {
     return T;
 }
 
+// Function to perform one cycle
 void one_cycle(int pwm_ventilo, int minutes)
 {
     for(int n = 0; n < minutes; n++) // Loop forever
@@ -89,23 +90,12 @@ int main(void)
     setenv("GMT", "Europe/Paris", 1);   // Set the timezone to Paris
     tzset();
 
-    // Cycles
-    one_cycle(255, 90);       // 1 heure 30
-    one_cycle(255, 90);     // 1 heure 30
-
-    one_cycle(0, 90);       // 1 heure 30
-    one_cycle(255, 90);     // 1 heure 30
-
-    one_cycle(0, 90);       // 1 heure 30
-    one_cycle(255, 90);     // 1 heure 30
-
-    one_cycle(0, 90);       // 1 heure 30
-    one_cycle(255, 90);     // 1 heure 30
-
-    one_cycle(0, 90);       // 1 heure 30
-    one_cycle(255, 90);     // 1 heure 30
-
-    // Total = 15 heures
+    // 5 cycles of 3 hours
+    for(int i = 0; i < 5; i++) {
+        one_cycle(255, 90);     // 1 heure 30
+        one_cycle(0, 90);       // 1 heure 30
+    }
+    // Total = 15 hours
 
     std::cout << std::endl << std::endl << "Fin du programme, fin de cyclage !!!" << std::endl;
 
