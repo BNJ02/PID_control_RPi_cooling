@@ -5,16 +5,16 @@ See the license attached to the root of the project.
 -->
 
 
-<p align="center"><strong><a href="#english-part"> 🇬🇧 English version below ! 🇬🇧 </a></strong></p>
+### [🇬🇧 English version below ! 🇬🇧](#-pid-control-and-regulation-of-rpi-cooling)
 
 # 🇫🇷 Asservissement et régulation du refroidissement d'une RPi avec un correcteur PID
 
 Le but de ce projet est d'asservir et de réguler le refroidissement d'une Raspberry Pi (RPi). Pour ce faire, j'ai acheté le kit suivant : [Kit RPi4 acheté](https://www.amazon.fr/Bqeel-Alimentation-Interrupteur-Ventilateur-Dissipateur/dp/B082PSBBMM/ref=sr_1_14?dib=eyJ2IjoiMSJ9.8ZfM4XGhIburiNAfEtgKbJFrU5zvWGZoBZ-6HRG4gFjt2i8pjqskQJPU_KjPN7vEdm6KOWqjWq_iFT-oObGvz2xWPGZmdHsSbrJnYXjrB3F7Ad_vnLYooypQqPPFwqQe7gGHJ57mA7NC30jQawqD7L142dfsjkJJnwaJw5LuD1YDDkUX0XS7CnVAGJchgjCAU4LaBSgiruQE6XINpymChrsZDNNicJMLEG-OJog1AwlwJedFPN9K_zxn6UqhTWdGk9F0qHX4Xsbf0k8BBapWVNJrBmAnePdH5uOXKM0Qf_0.QHt9RVqp2MEe4xmj7bZPu1lMkk6QZU34N2WpOzn6x-8&dib_tag=se&keywords=rpi4&qid=1718524926&sr=8-14&th=1).
 
-<center>
-<img src="doc/RPi4_kit.png" alt="Kit Raspberry Pi 4 utilisé, image venant d'Amazon">
-<h5><strong>Figure 1 : Kit Raspberry Pi 4 utilisé, image venant d'Amazon</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/RPi4_kit.png" alt="Kit Raspberry Pi 4 utilisé, image venant d'Amazon">
+    <h5><strong>Figure 1 : Kit Raspberry Pi 4 utilisé, image venant d'Amazon</strong></h5>
+</div>
 
 ## 🇫🇷 Sommaire
 
@@ -29,18 +29,18 @@ Le but de ce projet est d'asservir et de réguler le refroidissement d'une Raspb
 
 Le moteur DC du ventilateur consomme à sa pleine puissance plus de courant que peut en fournir le GPIO (General Purpose Input Output) de la Raspberry Pi 4. Il est donc nécessaire de réaliser un petit montage électronique pour l'adaptation de puissance :
 
-<center>
-<img src="doc/Hardware_schematic.png" alt="Schéma électronique du module de commande du ventilateur">
-<h5><strong>Figure 2 : Schéma électronique du module de commande du ventilateur</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/Hardware_schematic.png" alt="Schéma électronique du module de commande du ventilateur">
+    <h5><strong>Figure 2 : Schéma électronique du module de commande du ventilateur</strong></h5>
+</div>
 
 La diode est placée ici comme diode de roue libre pour éviter une tension de contre-électromotrice qui endommagerait les composants autour, notamment le transistor bipolaire. 
 <br>*"La diode de roue libre joue un rôle crucial dans la protection des circuits électroniques en fournissant un chemin de moindre résistance pour le courant induit lors de l'arrêt d'une bobine électromagnétique, prévenant ainsi les dommages causés par les pics de tension."*
 
-<center>
-<img src="doc/PWM_example.png" alt="Exemple d'un signal PWM">
-<h5><strong>Figure 3 : Exemple d'un signal PWM</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/PWM_example.png" alt="Exemple d'un signal PWM">
+    <h5><strong>Figure 3 : Exemple d'un signal PWM</strong></h5>
+</div>
 
 Nous pouvons désormais contrôler notre moteur en PWM (Pulse Width Modulation) ou MLI (Modulation par Largeur d'Impulsion), ce qui nous permettra de contrôler sa force électromotrice (fem) donc sa vitesse, à l'aide d'un signal TOR (Tout Ou Rien) en modulant la largeur temporelle de l'impulsion (de période fixe).
 
@@ -59,26 +59,26 @@ Nous pouvons en déduire une valeur moyenne d'environ 0.6 \* (3.3 - 0) = 1.98V, 
 
 Pour analyser le système, nous allons appliquer un échelon en entrée et observer sa réponse. Concrètement, nous allons laisser monter en température la RPi4 avec une utilisation CPU constante jusqu'à ce qu'elle tende vers une température constante, puis nous allons activer le ventilateur avec une commande maximale.
 
-<center>
-<img src="doc/Step_response.png" alt="Réponse indicielle du moteur DC">
-<h5><strong>Figure 4 : Réponse indicielle du moteur DC</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/Step_response.png" alt="Réponse indicielle du moteur DC">
+    <h5><strong>Figure 4 : Réponse indicielle du moteur DC</strong></h5>
+</div>
 
 Voici les résultats obtenus avec mon ventilateur sur 5 cycles. J'ai appliqué un filtre passe bas sur le signal enregistré car la mesure du capteur avait du bruit. J'ai réalisé un filtre numérique à Réponse Impulsionnelle Finie (RIF) à 61 points, déduit par tâtonnement. La mesure du temps de réponse de notre système est alors bien plus simple à réaliser et bien plus précise.
 
 L'objectif d'avoir 5 cycles est d'avoir une meilleure précision sur la lecture du temps de réponse du système, qui nous indique son comportement.
 
-<center>
-<img src="doc/1st_order_response.png" alt="Temps de réponse d'un système du premier ordre">
-<h5><strong>Figure 5 : Temps de réponse d'un système du premier ordre</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/1st_order_response.png" alt="Temps de réponse d'un système du premier ordre">
+    <h5><strong>Figure 5 : Temps de réponse d'un système du premier ordre</strong></h5>
+</div>
 
 À partir de l'analyse de ces réponses indicielles, nous pouvons assimiler notre moteur DC à un système du premier ordre puisqu'il n'a pas de dépassement de sa valeur finale. Voici les temps de réponse obtenus sur les 5 cycles :
 
-<center>
-<img src="doc/Response_times.png" alt="Temps de réponse des 5 cycles">
-<h5><strong>Figure 6 : Temps de réponse des 5 cycles</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/Response_times.png" alt="Temps de réponse des 5 cycles">
+    <h5><strong>Figure 6 : Temps de réponse des 5 cycles</strong></h5>
+</div>
 
 Nous choisirons **tau_FTBO = 230s** car qui peut le plus, peut le moins.
 
@@ -90,10 +90,10 @@ En pratique, l'ajout d'une action dérivée dans un correcteur PID n'est pas tou
 
 Voici le diagramme bloc que nous obtenons pour notre système en boucle fermée :
 
-<center>
-<img src="doc/Block_diagram.png" alt="Diagramme bloc du système en boucle fermée">
-<h5><strong>Figure 7 : Diagramme bloc du système en boucle fermée</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/Block_diagram.png" alt="Diagramme bloc du système en boucle fermée">
+    <h5><strong>Figure 7 : Diagramme bloc du système en boucle fermée</strong></h5>
+</div>
 
 Pour le détail des calculs, à partir de la Fonction de Transfert en Boucle Ouverte (FTBO) et de la Fonction de Transfert en Boucle Fermée (FTBF), pour obtenir les coefficients de ki et kp de notre correcteur PI, je vous invite à consulter mes calculs sur [ma feuille de calcul](doc/Calculation_sheet.pdf).
 
@@ -103,10 +103,10 @@ Pour le détail des calculs, à partir de la Fonction de Transfert en Boucle Ouv
 
 Passons maintenant à la partie programmation ! J'ai réalisé [un programme C++](PID_control_ventilator_analysis/main.cpp) permettant de réaliser le correcteur PID, de lire la température du CPU, de lire l'utilisation du CPU (en %) et d'enregistrer les performances du correcteur PI dans un fichier CSV. Ce fichier CSV peut ensuite être analysé par un petit script Python que j'ai réalisé sur [un Jupyter Notebook](PID_control_ventilator_analysis/Analyse.ipynb). Voici les performances obtenues :
 
-<center>
-<img src="doc/PI_perfs.png" alt="Performances du correcteur PI">
-<h5><strong>Figure 8 : Performances du correcteur PI</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/PI_perfs.png" alt="Performances du correcteur PI">
+    <h5><strong>Figure 8 : Performances du correcteur PI</strong></h5>
+</div>
 
 **Remarques** :
 
@@ -202,10 +202,10 @@ ___
 
 The aim of this project is to control and regulate the cooling of a Raspberry Pi (RPi) using a PID controller. To do this, I purchased the following kit: [RPi4 Kit](https://www.amazon.fr/Bqeel-Alimentation-Interrupteur-Ventilateur-Dissipateur/dp/B082PSBBMM/ref=sr_1_14?dib=eyJ2IjoiMSJ9.8ZfM4XGhIburiNAfEtgKbJFrU5zvWGZoBZ-6HRG4gFjt2i8pjqskQJPU_KjPN7vEdm6KOWqjWq_iFT-oObGvz2xWPGZmdHsSbrJnYXjrB3F7Ad_vnLYooypQqPPFwqQe7gGHJ57mA7NC30jQawqD7L142dfsjkJJnwaJw5LuD1YDDkUX0XS7CnVAGJchgjCAU4LaBSgiruQE6XINpymChrsZDNNicJMLEG-OJog1AwlwJedFPN9K_zxn6UqhTWdGk9F0qHX4Xsbf0k8BBapWVNJrBmAnePdH5uOXKM0Qf_0.QHt9RVqp2MEe4xmj7bZPu1lMkk6QZU34N2WpOzn6x-8&dib_tag=se&keywords=rpi4&qid=1718524926&sr=8-14&th=1).
 
-<center>
-<img src="doc/RPi4_kit.png" alt="Raspberry Pi 4 kit used, image from Amazon">
-<h5><strong>Figure 1: Raspberry Pi 4 kit used, image from Amazon</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/RPi4_kit.png" alt="Raspberry Pi 4 kit used, image from Amazon">
+    <h5><strong>Figure 1: Raspberry Pi 4 kit used, image from Amazon</strong></h5>
+</div>
 
 ## 🇬🇧 Table of contents
 
@@ -220,18 +220,18 @@ The aim of this project is to control and regulate the cooling of a Raspberry Pi
 
 The DC motor of the ventilator consumes more current at full power than the GPIO (General Purpose Input Output) of the Raspberry Pi 4 can provide. Therefore, it is necessary to make a small electronic circuit for power adaptation:
 
-<center>
-<img src="doc/Hardware_schematic.png" alt="Electronic schematic of the ventilator control module">
-<h5><strong>Figure 2: Electronic schematic of the ventilator control module</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/Hardware_schematic.png" alt="Electronic schematic of the ventilator control module">
+    <h5><strong>Figure 2: Electronic schematic of the ventilator control module</strong></h5>
+</div>
 
 The diode is placed here as a freewheeling diode to prevent a counter-electromotive force that could damage the surrounding components, especially the bipolar transistor.
 <br>"*The freewheeling diode plays a crucial role in protecting electronic circuits by providing a path of least resistance for the induced current when an electromagnetic coil stops, thus preventing damage caused by voltage spikes.*"
 
-<center>
-<img src="doc/PWM_example.png" alt="Example of a PWM signal">
-<h5><strong>Figure 3: Example of a PWM signal</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/PWM_example.png" alt="Example of a PWM signal">
+    <h5><strong>Figure 3: Example of a PWM signal</strong></h5>
+</div>
 
 We can now control our motor using PWM (Pulse Width Modulation), which will allow us to control its electromotive force and therefore its speed, using a binary signal by modulating the temporal width of the pulse (of fixed period).
 
@@ -250,26 +250,26 @@ We can deduce an average value of approximately 0.6 \* (3.3 - 0) = 1.98V, which 
 
 To analyze the system, we will apply a step input and observe its response. Specifically, we will let the RPi4 heat up with constant CPU usage until it tends towards a constant temperature, and then we will activate the ventilator with a maximum command.
 
-<center>
-<img src="doc/Step_response.png" alt="Step response of the DC motor">
-<h5><strong>Figure 4: Step response of the DC motor</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/Step_response.png" alt="Step response of the DC motor">
+    <h5><strong>Figure 4: Step response of the DC motor</strong></h5>
+</div>
 
 Here are the results obtained with my ventilator over 5 cycles. I applied a low-pass filter to the recorded signal because the sensor measurement had noise. I made a 61-point Finite Impulse Response (FIR) digital filter, deduced by trial and error. The measurement of the response time of our system is then much simpler and more accurate.
 
 The objective of having 5 cycles is to have better precision in reading the response time of the system, which indicates its behavior.
 
-<center>
-<img src="doc/1st_order_response.png" alt="Response time of a first-order system">
-<h5><strong>Figure 5: Response time of a first-order system</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/1st_order_response.png" alt="Response time of a first-order system">
+    <h5><strong>Figure 5: Response time of a first-order system</strong></h5>
+</div>
 
 Based on the analysis of these step responses, we can consider our DC motor as a first-order system since it does not have any overshoot of its final value. Here are the response times obtained over the 5 cycles:
 
-<center>
-<img src="doc/Response_times.png" alt="Response times of the 5 cycles">
-<h5><strong>Figure 6: Response times of the 5 cycles</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/Response_times.png" alt="Response times of the 5 cycles">
+    <h5><strong>Figure 6: Response times of the 5 cycles</strong></h5>
+</div>
 
 We will choose **tau\_FTBO = 230s** because who can do more, can do less.
 
@@ -281,10 +281,10 @@ In practice, adding a derivative action in a PID controller is not always necess
 
 Here is the block diagram we obtain for our closed-loop system:
 
-<center>
-<img src="doc/Block_diagram.png" alt="Block diagram of the closed-loop system">
-<h5><strong>Figure 7: Block diagram of the closed-loop system</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/Block_diagram.png" alt="Block diagram of the closed-loop system">
+    <h5><strong>Figure 7: Block diagram of the closed-loop system</strong></h5>
+</div>
 
 For the detail of the calculations, from the Open-Loop Transfer Function (FTBO) and the Closed-Loop Transfer Function (FTBF), to obtain the ki and kp coefficients of our PI controller, I invite you to consult my calculations on [my calculation sheet](doc/Calculation_sheet.pdf).
 
@@ -294,10 +294,10 @@ For the detail of the calculations, from the Open-Loop Transfer Function (FTBO) 
 
 Now let's move on to the programming part! I made a [C++ program](PID_control_ventilator_analysis/main.cpp) that allows to implement the PID controller, to read the CPU temperature, to read the CPU usage (in %) and to record the performance of the PI controller in a CSV file. This CSV file can then be analyzed by a small Python script that I made on [a Jupyter Notebook](PID_control_ventilator_analysis/Analyse.ipynb). Here are the performances obtained:
 
-<center>
-<img src="doc/PI_perfs.png" alt="Performance of the PI controller">
-<h5><strong>Figure 8: Performance of the PI controller</strong></h5>
-</center>
+<div align="center">
+    <img src="doc/PI_perfs.png" alt="Performance of the PI controller">
+    <h5><strong>Figure 8: Performance of the PI controller</strong></h5>
+</div>
 
 **Notes:**
 
