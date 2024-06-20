@@ -5,7 +5,7 @@ See the license attached to the root of the project.
 -->
 
 <div align="center">
-    <a href="#pid-control-and-regulation-of-rpi-cooling">
+    <a href="#-pid-control-and-regulation-of-rpi-cooling">
         <h3>🇬🇧 English version below ! 🇬🇧</h3>
     </a>
 </div>
