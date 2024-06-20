@@ -4,8 +4,11 @@ Copyright: All rights reserved.
 See the license attached to the root of the project.
 -->
 
-
-### [🇬🇧 English version below ! 🇬🇧](#-pid-control-and-regulation-of-rpi-cooling)
+<div align="center">
+    <a href="#pid-control-and-regulation-of-rpi-cooling">
+        <h3>🇬🇧 English version below ! 🇬🇧</h3>
+    </a>
+</div>
 
 # 🇫🇷 Asservissement et régulation du refroidissement d'une RPi avec un correcteur PID
 
@@ -192,11 +195,9 @@ Pour arrêter notre service :
 
 **En espérant que vous ayez trouvé cette description complète et concise et que le projet vous a plu !**
 
-
----
-***
-___
 <br><br>
+***
+<br>
 
 # 🇬🇧 PID Control and Regulation of RPi Cooling
 
