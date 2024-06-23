@@ -1,20 +1,28 @@
+## @file Supervising.py
+#  @brief Python script to supervise CPU usage and temperature.
 import time
 import psutil
-import os
 
-# Function to get the CPU usage
+## Function to get the CPU usage.
+#  @return float CPU usage in percentage.
 def get_cpu_usage():
     return psutil.cpu_percent(interval=0.5)
 
-# Function to get the CPU temperature
+## Function to get the CPU temperature.
+#  @return float CPU temperature in Celsius degrees.
 def get_cpu_temp():
     with open("/sys/class/thermal/thermal_zone0/temp", "r") as temperatureFile:
         T = float(temperatureFile.read()) / 1000
     return T
 
-# Main function
+## Main function to supervise CPU usage and temperature.
 if __name__ == "__main__":
+    ## @var cpu_usage
+    #  Variable to store the current CPU usage percentage.
     cpu_usage = 0.0
+
+    ## @var cpu_temp
+    #  Variable to store the current CPU temperature in Celsius.
     cpu_temp = 0.0
 
     # Main loop to display informations of supervising

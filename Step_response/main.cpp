@@ -1,4 +1,9 @@
-#include <pigpio.h>
+/**
+ * @file main.cpp
+ * @brief Main application file to generate a step response of the ventilator.
+ */
+
+#include <pigpio.h> // Needed for the GPIO functions
 #include <unistd.h> // Needed for the sleep function
 #include <stdio.h>  // Needed for the printf function
 #include <iostream> // Needed for the cout function
@@ -15,7 +20,10 @@
 // Run with: sudo ./main
 // ------------------------------------------------------------------------------- //
 
-// Function to get the CPU times
+/**
+ * @brief Function to get the CPU times.
+ * @return std::vector<size_t> Vector of CPU times.
+ */
 std::vector<size_t> get_cpu_times() {
     std::ifstream proc_stat("/proc/stat");
     proc_stat.ignore(5, ' '); // Skip the 'cpu' prefix.
@@ -24,7 +32,10 @@ std::vector<size_t> get_cpu_times() {
     return times;
 }
 
-// Function to get the CPU usage
+/**
+ * @brief Function to get the CPU usage.
+ * @return double CPU usage.
+ */
 double get_cpu_usage() {
     const std::vector<size_t> cpu_times_start = get_cpu_times();
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -34,7 +45,10 @@ double get_cpu_usage() {
     return static_cast<double>(ACTIVE_TIME) / (ACTIVE_TIME + IDLE_TIME);
 }
 
-// Function to get the CPU temperature
+/**
+ * @brief Function to get the CPU temperature.
+ * @return double CPU temperature.
+ */
 double get_cpu_temp() {
     FILE *temperatureFile;
     double T;
@@ -47,7 +61,11 @@ double get_cpu_temp() {
     return T;
 }
 
-// Function to perform one cycle
+/**
+ * @brief Function to perform one cycle.
+ * @param pwm_ventilo PWM value for the fan.
+ * @param minutes Duration of the cycle in minutes.
+ */
 void one_cycle(int pwm_ventilo, int minutes)
 {
     for(int n = 0; n < minutes; n++) // Loop forever
@@ -72,7 +90,10 @@ void one_cycle(int pwm_ventilo, int minutes)
     }
 }
 
-// Main function
+/**
+ * @brief Main function that generates a step response of the ventilator.
+ * @return int Program exit code.
+ */
 int main(void)
 {
     if (gpioInitialise() < 0) return 1;  // Return an error if initialisation failed

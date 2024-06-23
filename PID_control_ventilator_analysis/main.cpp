@@ -1,3 +1,8 @@
+/**
+ * @file main.cpp
+ * @brief Main application file to analyze the performances of PI controller.
+ */
+
 #include <pigpio.h> // Needed for the GPIO
 #include <unistd.h> // Needed for the sleep function
 #include <stdio.h>  // Needed for the printf function
@@ -19,7 +24,10 @@ using namespace std;
 // Run with: sudo ./main
 // ------------------------------------------------------------------------------- //
 
-// Function to get the CPU times
+/**
+ * @brief Function to get the CPU times.
+ * @return vector<size_t> Vector of CPU times.
+ */
 vector<size_t> get_cpu_times() {
     ifstream proc_stat("/proc/stat");
     proc_stat.ignore(5, ' '); // Skip the 'cpu' prefix.
@@ -29,7 +37,10 @@ vector<size_t> get_cpu_times() {
     return times;
 }
 
-// Function to get the CPU usage
+/**
+ * @brief Function to get the CPU usage.
+ * @return double CPU usage.
+ */
 double get_cpu_usage() {
     const vector<size_t> cpu_times_start = get_cpu_times();
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -40,7 +51,10 @@ double get_cpu_usage() {
     return static_cast<double>(ACTIVE_TIME) / (ACTIVE_TIME + IDLE_TIME);
 }
 
-// Function to get the CPU temperature
+/**
+ * @brief Function to get the CPU temperature.
+ * @return double CPU temperature.
+ */
 double get_cpu_temp() {
     FILE *temperatureFile;
     double T;
@@ -54,7 +68,11 @@ double get_cpu_temp() {
     return T;
 }
 
-// Function to get the CPU frequency
+
+/**
+ * @brief Function to get the CPU frequency.
+ * @return int CPU frequency.
+ */
 int get_cpu_freq() {
     ifstream file("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq");
     if (!file) {
@@ -68,7 +86,18 @@ int get_cpu_freq() {
     return freq;
 }
 
-// Function to control the PWM signal
+/**
+ * @brief Function to control the PWM signal.
+ * @param setpoint Setpoint value.
+ * @param measured_value Measured value.
+ * @param kp Proportional gain.
+ * @param ki Integral gain.
+ * @param kd Derivative gain.
+ * @param dt Sampling time.
+ * @param integral Integral value.
+ * @param last_error Last error value.
+ * @return float PWM signal.
+ */
 float pid_controller(int setpoint, float measured_value, float kp, float ki, float kd, int dt, float& integral, float& last_error) {
     float error =  measured_value - float(setpoint);
     integral += error * dt;
@@ -79,7 +108,12 @@ float pid_controller(int setpoint, float measured_value, float kp, float ki, flo
     return output;
 }
 
-// Function to clip the value between 120 and 255 (PWM signal)
+
+/**
+ * @brief Function to clip the value between 120 and 255 (PWM signal).
+ * @param value Value to clip.
+ * @return int Clipped value.
+ */
 int clip(int value) {
     int value_clipped = std::max(120, std::min(value, 255));
     if(value_clipped == 120) {
@@ -89,7 +123,11 @@ int clip(int value) {
     return value_clipped;
 }
 
-// Function to append to a CSV file
+/**
+ * @brief Function to append to a CSV file.
+ * @param values Vector of values to append.
+ * @param filename Name of the CSV file.
+ */
 void append_to_csv(const vector<tuple<int, float, string, float, int, float, float, float, float, float, int>>& values, const string& filename) {
     ofstream file(filename, std::ios_base::app);
     if (!file) {
@@ -115,7 +153,17 @@ void append_to_csv(const vector<tuple<int, float, string, float, int, float, flo
     file.close();
 }
 
-// Function to create a CSV file
+/**
+ * @brief Function to create a CSV file.
+ * @param filename Name of the CSV file.
+ * @param tau_FTBO FTBO time constant.
+ * @param tau_FTBF FTBF time constant.
+ * @param ki Integral gain.
+ * @param kp Proportional gain.
+ * @param kd Derivative gain.
+ * @param dt Sampling time.
+ * @param nb_points Number of points.
+ */
 void create_csv(const string& filename, int tau_FTBO, int tau_FTBF, float ki, float kp, float kd, int dt, int nb_points) {
     ofstream file(filename, std::ios_base::out);
     if (!file) {
@@ -132,7 +180,10 @@ void create_csv(const string& filename, int tau_FTBO, int tau_FTBF, float ki, fl
     file.close();
 }
 
-// Set up
+/**
+ * @brief Function to set up the GPIO.
+ * @return int 0 if successful, 1 otherwise.
+ */
 int setup() {
     // Set up the GPIO
     if (gpioInitialise() < 0) return 1;  // Return an error if initialisation failed
@@ -145,7 +196,10 @@ int setup() {
     return 0;  // Return 0 if everything is OK
 }
 
-// Main function
+/**
+ * @brief Main function that performs the PI controller and analyzes it.
+ * @return int Program exit code.
+ */
 int main(void)
 {
     // Set up the GPIO

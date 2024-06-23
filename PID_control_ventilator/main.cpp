@@ -1,3 +1,8 @@
+/**
+ * @file main.cpp
+ * @brief Main application file to performs the PI controller for the RPi service.
+ */
+
 #include <pigpio.h> // Needed for the GPIO
 #include <unistd.h> // Needed for the sleep function
 #include <fstream>  // Needed for the file stream
@@ -16,7 +21,10 @@ using namespace std;
 // Run with: sudo ./main.bin
 // ------------------------------------------------------------------------------- //
 
-// Function to get the CPU times
+/**
+ * @brief Function to get the CPU times.
+ * @return vector<size_t> Vector of CPU times.
+ */
 vector<size_t> get_cpu_times() {
     ifstream proc_stat("/proc/stat");
     proc_stat.ignore(5, ' '); // Skip the 'cpu' prefix.
@@ -26,7 +34,10 @@ vector<size_t> get_cpu_times() {
     return times;
 }
 
-// Function to get the CPU usage
+/**
+ * @brief Function to get the CPU usage.
+ * @return double CPU usage.
+ */
 double get_cpu_usage() {
     const vector<size_t> cpu_times_start = get_cpu_times();
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -37,7 +48,10 @@ double get_cpu_usage() {
     return static_cast<double>(ACTIVE_TIME) / (ACTIVE_TIME + IDLE_TIME);
 }
 
-// Function to get the CPU temperature
+/**
+ * @brief Function to get the CPU temperature.
+ * @return double CPU temperature.
+ */
 double get_cpu_temp() {
     FILE *temperatureFile;
     double T;
@@ -51,7 +65,18 @@ double get_cpu_temp() {
     return T;
 }
 
-// Function to control the PWM signal
+/**
+ * @brief Function to control the PWM signal.
+ * @param setpoint Setpoint value.
+ * @param measured_value Measured value.
+ * @param kp Proportional gain.
+ * @param ki Integral gain.
+ * @param kd Derivative gain.
+ * @param dt Sampling time.
+ * @param integral Integral value.
+ * @param last_error Last error value.
+ * @return float PWM signal.
+ */
 float pid_controller(int setpoint, float measured_value, float kp, float ki, float kd, int dt, float& integral, float& last_error) {
     float error =  measured_value - float(setpoint);
     integral += error * dt;
@@ -62,7 +87,11 @@ float pid_controller(int setpoint, float measured_value, float kp, float ki, flo
     return output;
 }
 
-// Function to clip the value between 120 and 255 (PWM signal)
+/**
+ * @brief Function to clip the value between 120 and 255 (PWM signal).
+ * @param value Value to clip.
+ * @return int Clipped value.
+ */
 int clip(int value) {
     int value_clipped = std::max(120, std::min(value, 255));
     if(value_clipped == 120) {
@@ -72,7 +101,10 @@ int clip(int value) {
     return value_clipped;
 }
 
-// Set up
+/**
+ * @brief Function to set up the GPIO and the PiGPIO service.
+ * @return int 0 if successful, 1 otherwise.
+ */
 int setup() {
     // Remove the files if it exists
     system("sudo rm /var/run/pigpio.pid");  // Remove the file if it exists
@@ -88,7 +120,10 @@ int setup() {
     return 0;  // Return 0 if everything is OK
 }
 
-// Main function
+/**
+ * @brief Main function that performs the PI controller.
+ * @return int Program exit code.
+ */
 int main(void)
 {
     // Set up the GPIO
